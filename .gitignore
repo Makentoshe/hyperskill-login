@@ -4,6 +4,4 @@
 /.gradle/
 # Ignore plugin files
 *.iml
-*.yaml
-*.html
 local.properties
