@@ -1,0 +1,5 @@
+/stopwatch/task/build/
+/build/intermediates/lint-cache/
+/.idea
+/.gradle
+/build

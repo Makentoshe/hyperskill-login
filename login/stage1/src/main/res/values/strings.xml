@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Log in</string>
+
+    <string name="error_empty_email">Email field should not be empty</string>
+    <string name="error_empty_password">Password field should not be empty</string>
+</resources>
