@@ -1,17 +1,37 @@
 Stage idea:
 
-Here we create a UI for our login screen and add a simple ui logic.
+Here we create a network request for accessing some cookies and return a response.
 
-UI components:
- - email_edit_text EditText with hint "email"
- - password_edit_text EditText with hint "password"
- - login_button Button
- - login_progress ProgressBar
- - message_error TextView
+The network request officially starts in another thread due to NetworkOnMainThreadException.
+We also must remember to declare INTERNET permission in our android.Manifest file.
 
-When login_button pressed, the email and password fields check on a blank condition.
-If at least one fields are blank, the execution interrupts, and in error_message will be
-"Email field should not be empty" or "Password field should not be empty".
+We can create a thread with construction
 
-If all fields are not empty the progress_bar starts displaying and login_button disables.
-At this time the login request will be officially started.
+thread(start = false, isDaemon = true) {
+// here some network code
+}
+
+To create a request we first need to create a network client which does most of the job.
+For OkHttp it is really easy.
+
+val client = OkHttpClient.Builder().addInterceptor().build()
+
+We add a CookieJar for storing cookies between requests.
+This interface can be easily implemented with the next logic:
+    - store all cookies in HashMap<HttpUrl, ArrayList<Cookie>>
+    - when we need to use cookies just return all of them using hashMap.values.flatten() method.
+
+    We also should add an interceptor for a better test experience with networking,
+    so if you try to ignore it whole network tests will be automatically failed. JFYI.
+
+    Now it's a good point to create a request.
+
+    val request = Request.Builder().get().url("https://hyperskill.org").build()
+
+    This request just goes to the hyperskill domain for receiving necessary for future cookies.
+
+    For performing created request just call
+
+    val response = client.newCall(request).execute()
+
+    In the response variable, our networking result will be placed.
