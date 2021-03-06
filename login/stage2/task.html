@@ -1,0 +1,17 @@
+Stage idea:
+
+Here we create a UI for our login screen and add a simple ui logic.
+
+UI components:
+ - email_edit_text EditText with hint "email"
+ - password_edit_text EditText with hint "password"
+ - login_button Button
+ - login_progress ProgressBar
+ - message_error TextView
+
+When login_button pressed, the email and password fields check on a blank condition.
+If at least one fields are blank, the execution interrupts, and in error_message will be
+"Email field should not be empty" or "Password field should not be empty".
+
+If all fields are not empty the progress_bar starts displaying and login_button disables.
+At this time the login request will be officially started.
