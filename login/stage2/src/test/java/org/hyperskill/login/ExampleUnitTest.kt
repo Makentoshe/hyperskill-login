@@ -5,8 +5,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import okhttp3.HttpUrl
+import okhttp3.Request
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -16,9 +17,14 @@ import org.robolectric.RobolectricTestRunner
 class ExampleUnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
+    private val client = activityController.get().client
+
+    private val interceptor = client.interceptors.find { it is Stage2TestInterceptor } as? Stage2TestInterceptor
+            ?: throw IllegalStateException("${Stage2TestInterceptor::class.simpleName} was not added to the client")
 
     @Test
     fun testShouldCheckEmailEditTextExist() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "does view with id \"email_edit_text\" placed in activity?"
@@ -27,6 +33,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckEmailEditTextHint() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "in button property \"hint\""
@@ -35,6 +42,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckPasswordEditTextExist() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "does view with id \"password_edit_text\" placed in activity?"
@@ -43,6 +51,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckPasswordEditTextHint() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "in button property \"hint\""
@@ -51,6 +60,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckLoginButtonExist() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "does view with id \"login_button\" placed in activity?"
@@ -59,6 +69,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckLoginButtonText() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "in button property \"text\""
@@ -67,6 +78,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckLoginProgressBarExist() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "does view with id \"login_progress\" placed in activity?"
@@ -75,6 +87,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckLoginProgressBarInitialVisibility() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "view with id \"login_progress\" should be in GONE state on application launch"
@@ -83,6 +96,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckErrorMessageTextViewExist() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "does view with id \"message_error\" placed in activity?"
@@ -91,6 +105,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldCheckErrorMessageTextViewInitialVisibility() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val message = "view with id \"message_error\" should be in GONE state on application launch"
@@ -99,6 +114,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldShowErrorMessageOnBlankEmail() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val email = activity.findViewById<EditText>(R.id.email_edit_text)
@@ -116,6 +132,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldShowErrorMessageOnEmptyEmail() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val password = activity.findViewById<EditText>(R.id.password_edit_text)
@@ -131,6 +148,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldShowErrorMessageOnEmptyPassword() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val email = activity.findViewById<EditText>(R.id.email_edit_text)
@@ -146,6 +164,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldShowErrorMessageOnBlankPassword() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val email = activity.findViewById<EditText>(R.id.email_edit_text)
@@ -163,6 +182,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldShowProgressBarOnLoginClick() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val email = activity.findViewById<EditText>(R.id.email_edit_text)
@@ -180,6 +200,7 @@ class ExampleUnitTest {
 
     @Test
     fun testShouldDisableLoginButtonOnLoginClick() {
+        interceptor.enable = false
         val activity = activityController.setup().get()
 
         val email = activity.findViewById<EditText>(R.id.email_edit_text)
@@ -194,6 +215,27 @@ class ExampleUnitTest {
 
         val message1 = "does view \"login_button\" disabled on login click?"
         assertEquals(message1, false, login.isEnabled)
+    }
+
+    @Test
+    fun testShouldStartNetworkRequestOnLoginClick() {
+        val activity = activityController.setup().get()
+
+        val email = activity.findViewById<EditText>(R.id.email_edit_text)
+        val password = activity.findViewById<EditText>(R.id.password_edit_text)
+        val login = activity.findViewById<Button>(R.id.login_button)
+
+        email.setText("email")
+        password.setText("password")
+        login.performClick()
+
+        Thread.sleep(1000)
+
+        val message1 = "Interceptor was not used."
+        assertTrue(message1, interceptor.wasUsed)
+
+        val message2 = "Url host was invalid. Should be: hyperskill.org"
+        assertTrue(message2, interceptor.wasProperHost)
     }
 
 }

@@ -12,7 +12,8 @@ thread(start = false, isDaemon = true) {
 }
 
 To create a request we first need to create a network client which does most of the job.
-For OkHttp it is really easy.
+For OkHttp it is really easy. This client shouldn't be a private in the class because
+we need an access to it in our tests.
 
 val client = OkHttpClient.Builder().addInterceptor().build()
 
@@ -21,7 +22,7 @@ This interface can be easily implemented with the next logic:
     - store all cookies in HashMap<HttpUrl, ArrayList<Cookie>>
     - when we need to use cookies just return all of them using hashMap.values.flatten() method.
 
-    We also should add an interceptor for a better test experience with networking,
+    We also should add a Stage2TestInterceptor for a better test experience with networking,
     so if you try to ignore it whole network tests will be automatically failed. JFYI.
 
     Now it's a good point to create a request.

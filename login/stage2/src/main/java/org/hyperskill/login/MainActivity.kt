@@ -10,11 +10,13 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     private val cookieJar = CustomCookieJar()
-    private val client = OkHttpClient.Builder().cookieJar(cookieJar).build()
+    val client = OkHttpClient.Builder().cookieJar(cookieJar)
+            .addInterceptor(Stage2TestInterceptor())
+            .build()
+
     private val thread = thread(start = false, isDaemon = true) {
         val request = Request.Builder().url("https://hyperskill.org").build()
         val response = client.newCall(request).execute()
-        println(response)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

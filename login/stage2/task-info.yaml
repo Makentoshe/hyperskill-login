@@ -26,3 +26,5 @@ files:
   visible: true
 - name: src/test/java/org/hyperskill/login/ExampleUnitTest.kt
   visible: false
+- name: src/main/java/org/hyperskill/login/Stage2TestInterceptor.kt
+  visible: true
