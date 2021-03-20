@@ -24,7 +24,13 @@ files:
   visible: false
 - name: src/main/java/org/hyperskill/login/MainActivity.kt
   visible: true
-- name: src/test/java/org/hyperskill/login/ExampleUnitTest.kt
-  visible: false
-- name: src/main/java/org/hyperskill/login/Stage2TestInterceptor.kt
+- name: src/main/java/org/hyperskill/login/RequireOkHttpClient.kt
   visible: true
+- name: src/test/java/org/hyperskill/login/Stage2UnitTest.kt
+  visible: false
+- name: src/test/java/org/hyperskill/login/Stage1UnitTest.kt
+  visible: false
+- name: src/main/java/org/hyperskill/login/RequireCookieJar.kt
+  visible: true
+- name: src/test/resources/csrftoken_success.html
+  visible: false

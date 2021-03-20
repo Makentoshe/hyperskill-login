@@ -7,14 +7,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RequireOkHttpClient, RequireCookieJar {
 
-    private val cookieJar = CustomCookieJar()
-    val client = OkHttpClient.Builder().cookieJar(cookieJar)
-            .addInterceptor(Stage2TestInterceptor())
-            .build()
+    private val customCookieJar = CustomCookieJar()
+    override val cookieJar: CookieJar
+        get() = customCookieJar
 
-    private val thread = thread(start = false, isDaemon = true) {
+    override var client = OkHttpClient.Builder().cookieJar(customCookieJar).build()
+
+    private val thread = thread(start = false, isDaemon = false) {
         val request = Request.Builder().url("https://hyperskill.org").build()
         val response = client.newCall(request).execute()
     }
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private class CustomCookieJar : CookieJar {
 
-        private val cookies = HashMap<HttpUrl, ArrayList<Cookie>>()
+        val cookies = HashMap<HttpUrl, ArrayList<Cookie>>()
 
         override fun loadForRequest(url: HttpUrl): List<Cookie> {
             return cookies.values.flatten()
