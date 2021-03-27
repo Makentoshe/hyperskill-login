@@ -1,0 +1,19 @@
+Stage idea:
+
+Here we should manually add Gson library for serializing/deserializing.
+
+For gradle kts: implementation("com.google.code.gson:gson:2.8.6")
+
+After that we should create a class for serialization ours login and password
+
+data class LoginCredentials(val email: String, val password: String)
+
+And add a proper annotations for serializing.
+
+Next step is to perform a login request. It will be a POST request to https://hyperskill.org/api/profiles/login
+
+It consumes our serialized json class as body, Referer and X-CSRFToken as headers.
+
+(explain here a Referer and csrf-token headers)
+
+After login process will be finished we should to enable login button and hide progress bar.
