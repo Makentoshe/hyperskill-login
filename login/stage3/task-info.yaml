@@ -36,3 +36,9 @@ files:
   visible: false
 - name: src/main/java/org/hyperskill/login/LoginCredentials.kt
   visible: true
+- name: src/test/java/org/hyperskill/login/Stage3UnitTest.kt
+  visible: false
+- name: src/test/resources/login_success.json
+  visible: false
+- name: src/test/resources/login_failure.json
+  visible: false

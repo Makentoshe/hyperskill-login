@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity(), RequireOkHttpClient, RequireCookieJar 
             login_progress.visibility = View.GONE
         }
 
-        if ((loginResponse.code / 100) == 2) {
-            println(loginResponse.body?.string())
-        } else {
-            message_error.text = loginResponse.body?.string()
-            message_error.visibility = View.VISIBLE
-        }
+//        if ((loginResponse.code / 100) == 2) {
+//            println(loginResponse.body?.string())
+//        } else {
+            runOnUiThread {
+                message_error.text = loginResponse.body?.string()
+                message_error.visibility = View.VISIBLE
+            }
+//        }
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
